@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReportCompleted;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ReportController extends Controller
@@ -38,6 +40,18 @@ class ReportController extends Controller
             return "Current reports: $currentReports";
         }
 
+        // Check if there's a completed report with those dates
+        $report = Report::where([
+            "min_date" => $min_date,
+            "max_date" => $max_date,
+            "completed" => true
+        ])->count();
+
+        if ($report)
+        {
+            return "Report already exists and it's completed";
+        }
+
         // Create the report and a token before contacting the API
         $token = Str::random(32);
 
@@ -55,7 +69,8 @@ class ReportController extends Controller
         // Checking the response
         if ($response->object()->ok)
         {
-            return "Todo ok";
+            Mail::to("test@email.com")->send(new ReportCompleted());
+            return "ok";
         } else {
             return "Errorr";
         }

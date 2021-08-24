@@ -25,5 +25,7 @@ Route::get('/', function () {
  * REPORTS
  */
 Route::get('/reports/notify', [ReportController::class, "send_notification"]);
+// TODO: Remove withoutMiddleware !
+Route::post('/reports', [ReportController::class, "store"])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 require __DIR__.'/auth.php';

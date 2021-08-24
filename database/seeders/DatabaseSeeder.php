@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $password = Hash::make("password");
+        $password = Hash::make('cF1Up43$Dm@3Vubd');
 
         \App\Models\User::factory()->create([
-            "email" => "pedro@email.com",
+            "email" => "pedrommartin97@gmail.com",
             "password" => $password
         ]);
     }

@@ -16,7 +16,8 @@ class ReportController extends Controller
      *
      * @param Request $request
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'min_date' => ['date_format:Y-m-d', 'required'],
             'min_time' => ['date_format:H:i', 'required'],
@@ -35,8 +36,7 @@ class ReportController extends Controller
 
         // Return an error if a report is already running
         // TODO: Manage queues or something so another report can be added
-        if ($currentReports > 0)
-        {
+        if ($currentReports > 0) {
             return "Current reports: $currentReports";
         }
 
@@ -47,8 +47,7 @@ class ReportController extends Controller
             "completed" => true
         ])->count();
 
-        if ($report)
-        {
+        if ($report) {
             return "Report already exists and it's completed";
         }
 
@@ -62,17 +61,16 @@ class ReportController extends Controller
         ]);
 
         // Contacting to the API to instantiate the py exporter
-        $response = Http::post('http://localhost:3000/reports', [
+        $apiResponse = Http::post('http://localhost:3000/reports', [
             "token" => $token
         ]);
 
         // Checking the response
-        if ($response->object()->ok)
-        {
+        if ($apiResponse->object()->ok) {
             Mail::to("test@email.com")->send(new ReportCompleted());
             return "ok";
         } else {
-            return "Errorr";
+            return "Error";
         }
     }
 
@@ -82,7 +80,8 @@ class ReportController extends Controller
      * @param Request $request
      * @return bool[]
      */
-    public function send_notification(Request $request) {
+    public function send_notification(Request $request)
+    {
 
         // Get the query param
         $token = $request->query('token');
@@ -101,5 +100,26 @@ class ReportController extends Controller
         return [
             "ok" => true
         ];
+    }
+
+    public function download_report(Report $report)
+    {
+        /*
+        $apiResponse = Http::get('http://localhost:3000/reports', [
+            "filename" => $report->filename
+        ]);
+
+        $responseObject = $apiResponse->object();
+
+        //dd($responseObject);
+
+        if ($responseObject) {
+            return response()->streamDownload(function () use ($responseObject) {
+                echo $responseObject->data->stream;
+            }, $report->filename);
+        } else {
+            abort(404);
+        }
+        */
     }
 }

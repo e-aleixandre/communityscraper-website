@@ -12,5 +12,10 @@ class Report extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["min_date", "max_date", "token"];
+    protected $fillable = ["min_date", "max_date", "token", "notify"];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

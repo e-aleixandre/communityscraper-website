@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import BreezeButton from '@/Components/Button.vue'
+import BreezeButton from '@/Components/UI/MyButton.vue'
 import BreezeGuestLayout from '@/Layouts/Guest.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 

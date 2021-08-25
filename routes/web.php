@@ -13,7 +13,7 @@ use App\Models\Report;
 |
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| contains the 'web' middleware group. Now create something great!
 |
 */
 
@@ -24,9 +24,11 @@ Route::get('/', function () {
 /**
  * REPORTS
  */
-Route::get('/reports/notify', [ReportController::class, "send_notification"]);
-// TODO: Remove withoutMiddleware !
-Route::post('/reports', [ReportController::class, "store"])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-Route::get('/reports/{report}/download', [ReportController::class, "download_report"]);
+Route::get('/reports', [ReportController::class, 'index'])->middleware('auth')->name('reports.index');
+// TODO: Is it more reasonable to use a post request?
+Route::get('/reports/notify', [ReportController::class, 'send_notification']);
+Route::post('/reports', [ReportController::class, 'store'])->middleware('auth')->name('reports.store');
+Route::get('/reports/create', [ReportController::class, 'create'])->middleware('auth')->name('reports.create');
+Route::get('/reports/{report}/download', [ReportController::class, 'download_report'])->middleware('auth')->name('reports.download');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

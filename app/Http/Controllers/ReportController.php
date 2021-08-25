@@ -7,10 +7,27 @@ use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class ReportController extends Controller
 {
+    public function index()
+    {
+        $reports = Report::all();
+
+        return Inertia::render('Reports/ListReports', [
+            "reports" => $reports
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Reports/CreateReport');
+    }
+
     /**
      * Create a new report and fetch the endpoint to start the python exporter
      *
@@ -18,20 +35,23 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
+        // Validating the input
         $validated = $request->validate([
             'min_date' => ['date_format:Y-m-d', 'required'],
             'min_time' => ['date_format:H:i', 'required'],
             'max_date' => ['date_format:Y-m-d', 'required'],
-            'max_time' => ['date_format:H:i', 'required']
+            'max_time' => ['date_format:H:i', 'required'],
+            'notify' => ['boolean']
         ]);
 
         // Transforming date + time in datetime string
         $min_date = "{$validated['min_date']}T{$validated['min_time']}";
         $max_date = "{$validated['max_date']}T{$validated['max_time']}";
 
+        // Checking currently running reports
         $currentReports = Report::where([
-            "completed" => false,
-            "errored" => false
+            'completed' => false,
+            'errored' => false
         ])->count();
 
         // Return an error if a report is already running
@@ -42,36 +62,50 @@ class ReportController extends Controller
 
         // Check if there's a completed report with those dates
         $report = Report::where([
-            "min_date" => $min_date,
-            "max_date" => $max_date,
-            "completed" => true
+            'min_date' => $min_date,
+            'max_date' => $max_date,
+            'completed' => true
         ])->count();
 
         if ($report) {
-            return "Report already exists and it's completed";
+            return Redirect::back()->with([
+                'ok' => false,
+                'type' => 'warning',
+                'message' => 'Ya existe un informe con esas fechas de inicio y final, y parece que se generó correctamente.
+                 Revisa la lista de informes. Si crees que es un error, contacta con el administrador.'
+            ]);
         }
 
         // Create the report and a token before contacting the API
         $token = Str::random(32);
 
-        $report = Report::create([
-            "min_date" => $min_date,
-            "max_date" => $max_date,
-            "token" => $token
+        $request->user()->reports()->create([
+            'min_date' => $min_date,
+            'max_date' => $max_date,
+            'token' => $token,
+            'notify' => $validated['notify']
         ]);
 
         // Contacting to the API to instantiate the py exporter
         $apiResponse = Http::post('http://localhost:3000/reports', [
-            "token" => $token
+            'token' => $token
         ]);
 
-        // Checking the response
-        if ($apiResponse->object()->ok) {
-            Mail::to("test@email.com")->send(new ReportCompleted());
-            return "ok";
-        } else {
-            return "Error";
+        // Create the response array
+        $responseArray = [
+            'ok' => $apiResponse->object()->ok
+        ];
+
+        // Populate the response array if there was an error
+        if (!$apiResponse->object()->ok) {
+            $responseArray['message'] = 'Ha habido un error al crear el informe. Vuelve a intentarlo en unos segundos. Si después de varios
+                intentos aún no puedes generar informes contacta con el administrador.';
+
+            $responseArray['type'] = 'danger';
         }
+
+        // Return the response array
+        return redirect()->back()->with($responseArray);
     }
 
     /**
@@ -95,10 +129,19 @@ class ReportController extends Controller
         // Update the model
         $report->save();
 
-        // NOTIFY
+        // Fetch the file
+        $responseObject = Http::get('http://localhost:3000/reports', [
+            'filename' => $report->filename
+        ]);
 
+        $file = $responseObject->body();
+
+        // NOTIFY
+        Mail::to($report->user)->send(new ReportCompleted($report->filename, $file));
+
+        // Communicating to the API everything went OK
         return [
-            "ok" => true
+            'ok' => true
         ];
     }
 
@@ -106,7 +149,7 @@ class ReportController extends Controller
     {
         /*
         $apiResponse = Http::get('http://localhost:3000/reports', [
-            "filename" => $report->filename
+            'filename' => $report->filename
         ]);
 
         $responseObject = $apiResponse->object();

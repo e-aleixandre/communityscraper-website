@@ -23,8 +23,9 @@ class CreateReportsTable extends Migration
             $table->boolean('errored')->default(false);
             $table->string('token', 32)->nullable();
             $table->integer('pid')->default(0);
+            $table->boolean('notify')->default(false);
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete()->cascadeOnUpdate();
             $table->timestamps();
-
             // Indexing
             $table->index(['completed', 'errored'], 'pending_index');
             $table->index('token', 'token_index');

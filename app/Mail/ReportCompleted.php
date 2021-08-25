@@ -11,14 +11,18 @@ class ReportCompleted extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $filename;
+    protected $contents;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($filename, $contents)
     {
-        //
+        $this->filename = $filename;
+        $this->contents = $contents;
     }
 
     /**
@@ -28,6 +32,8 @@ class ReportCompleted extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.reports.completed');
+        return $this->markdown('emails.reports.completed')->attachData($this->contents, $this->filename, [
+            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ]);
     }
 }

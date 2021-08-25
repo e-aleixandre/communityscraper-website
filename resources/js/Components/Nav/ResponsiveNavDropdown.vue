@@ -2,7 +2,7 @@
     <div>
         <button @click="open = !open" class="inline-flex items-center" :class="[classes, openClasses]">
             <slot name="category" />
-            <expand-icon/>
+            <expand-icon class="w-3 h-3"/>
         </button>
         <div v-show="open" class="resp-nav-dropdown-wrapper">
             <slot name="links" />

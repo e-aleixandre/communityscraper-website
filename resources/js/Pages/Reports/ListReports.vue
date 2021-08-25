@@ -18,7 +18,7 @@
             </template>
             <template #actions>
                 <my-button class="bg-red-500 hover:bg-red-600" :disabled="deleteModal.processing"
-                           @click="deleteClient(deleteModal.reportId)">
+                           @click="deleteReport(deleteModal.reportId)">
                     Borrar
                 </my-button>
             </template>
@@ -69,30 +69,41 @@
 
                                         <td class="py-3 px-6 text-center whitespace-nowrap">
                                             <div :class="{'bg-indigo-500': !report.completed && !report.errored,
-                                                           'bg-red-500': report.errored,
-                                                           'bg-green-500': report.completed}"
+                                                           'bg-red-500': report.completed && !report.errored,
+                                                           'bg-green-500': report.errored && !report.completed,
+                                                           'bg-gray-700': report.errored && report.completed}"
                                                  class="rounded-full py-1 inline-block px-6 text-white text-xs w-32 text-center font-extrabold">
-                                                {{
-                                                    report.completed ? "COMPLETADO" : report.errored ? "FALLIDO" : "PENDIENTE"
-                                                }}
+                                                <template v-if="!report.completed && !report.errored">
+                                                    PENDIENTE
+                                                </template>
+                                                <template v-else-if="report.completed && !report.errored">
+                                                    COMPLETADO
+                                                </template>
+                                                <template v-else-if="report.errored && !report.completed">
+                                                    FALLIDO
+                                                </template>
+                                                <template v-else>
+                                                    DETENIDO
+                                                </template>
                                             </div>
                                         </td>
                                         <!-- Actions -->
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex item-center justify-center">
                                                 <!-- Action: download -->
-                                                <div
-                                                    v-if="report.completed"
+                                                <a
+                                                    :href="route('reports.download', report.id)"
+                                                    v-if="report.completed && !report.errored"
                                                     class="w-5 mr-2 transform hover:text-purple-500 hover:scale-110 cursor-pointer">
-                                                    <download-icon @click.stop=""/>
-                                                </div>
+                                                    <download-icon />
+                                                </a>
                                                 <!-- Action: stop -->
                                                 <div
                                                     v-if="!report.completed && !report.errored"
                                                     class="w-5 mr-2 transform hover:text-purple-500 hover:scale-110 cursor-pointer">
-                                                    <stop-icon @click.stop=""/>
+                                                    <stop-icon @click.stop="stopProcess(report.id)"/>
                                                 </div>
-                                                <!-- Action: restart -->
+                                                <!-- Action: restart -- bool != bool simulates XOR -->
                                                 <div
                                                     v-if="report.errored"
                                                     class="w-5 mr-2 transform hover:text-purple-500 hover:scale-110 cursor-pointer">
@@ -167,9 +178,11 @@ export default {
             this.deleteModal.reportId = reportId;
             this.deleteModal.show = true;
         },
-
-        deleteClient(reportId) {
-            Inertia.delete(this.route('clients.destroy', reportId), {
+        stopProcess(reportId) {
+          Inertia.post(this.route('reports.stop', reportId));
+        },
+        deleteReport(reportId) {
+            Inertia.delete(this.route('reports.destroy', reportId), {
                 onFinish: () => {
                     this.deleteModal.show = false;
                     this.deleteModal.processing = false;

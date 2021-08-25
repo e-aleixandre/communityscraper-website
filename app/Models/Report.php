@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string filename
+ * @property string token
+ * @property mixed id
  */
 class Report extends Model
 {

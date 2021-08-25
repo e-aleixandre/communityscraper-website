@@ -25,10 +25,14 @@ Route::get('/', function () {
  * REPORTS
  */
 Route::get('/reports', [ReportController::class, 'index'])->middleware('auth')->name('reports.index');
+
 // TODO: Is it more reasonable to use a post request?
 Route::get('/reports/notify', [ReportController::class, 'send_notification']);
+
 Route::post('/reports', [ReportController::class, 'store'])->middleware('auth')->name('reports.store');
 Route::get('/reports/create', [ReportController::class, 'create'])->middleware('auth')->name('reports.create');
 Route::get('/reports/{report}/download', [ReportController::class, 'download_report'])->middleware('auth')->name('reports.download');
+Route::post('/reports/{report}/stop', [ReportController::class, 'stop_report'])->middleware('auth')->name('reports.stop');
+Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->middleware('auth')->name('reports.destroy');
 
 require __DIR__ . '/auth.php';

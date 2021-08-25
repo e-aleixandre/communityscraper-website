@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ReportCompleted;
+use App\Mail\ReportErrored;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -137,7 +138,10 @@ class ReportController extends Controller
         $file = $responseObject->body();
 
         // NOTIFY
-        Mail::to($report->user)->send(new ReportCompleted($report->filename, $file));
+        if ($report->completed)
+            Mail::to($report->user)->send(new ReportCompleted($report->filename, $file));
+        else
+            Mail::to($report->user)->send(new ReportErrored());
 
         // Communicating to the API everything went OK
         return [
@@ -145,24 +149,53 @@ class ReportController extends Controller
         ];
     }
 
-    public function download_report(Report $report)
+    public function download_report(Request $request, Report $report)
     {
-        /*
         $apiResponse = Http::get('http://localhost:3000/reports', [
             'filename' => $report->filename
         ]);
 
-        $responseObject = $apiResponse->object();
-
-        //dd($responseObject);
-
-        if ($responseObject) {
-            return response()->streamDownload(function () use ($responseObject) {
-                echo $responseObject->data->stream;
-            }, $report->filename);
-        } else {
+        if (!$apiResponse->ok())
             abort(404);
-        }
-        */
+
+        return response()->streamDownload(function () use ($apiResponse) {
+            echo $apiResponse->body();
+        }, $report->filename, [
+            'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ]);
+    }
+
+    public function stop_report(Report $report)
+    {
+        $token = Str::random(32);
+
+        $report->update([
+            'token' => $token
+        ]);
+
+        $apiResponse = Http::post("http://localhost:3000/reports/$report->id/stop", [
+            'token' => $token
+        ]);
+
+        return Redirect::back()->with([
+            'ok' => $apiResponse->ok()
+        ]);
+    }
+
+    public function destroy(Report $report)
+    {
+        $token = Str::random(32);
+
+        $report->update([
+            'token' => $token
+        ]);
+
+        $apiResponse = Http::post("http://localhost:3000/reports/$report->id/destroy", [
+            'token' => $token
+        ]);
+
+        return Redirect::back()->with([
+            'ok' => $apiResponse->ok()
+        ]);
     }
 }

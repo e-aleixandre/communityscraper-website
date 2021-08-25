@@ -22,7 +22,7 @@
                         <div class="mb-4">
                             <input-label for="min_time">Hora inicial</input-label>
                             <input-field id="min_time" type="time" :class="{ 'border-red-500': errors.min_time }"
-                                         class="mt-1 block w-full" v-model="form.min_time" required/>
+                                         class="mt-1 block w-24" v-model="form.min_time" required/>
                             <input-error class="mt-1" :message="errors.min_time"/>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         <div class="mb-4">
                             <input-label for="max_time">Hora final</input-label>
                             <input-field id="max_time" type="time" :class="{ 'border-red-500': errors.max_time }"
-                                         class="mt-1 block w-full" v-model="form.max_time" required/>
+                                         class="mt-1 block w-24" v-model="form.max_time" required/>
                             <input-error class="mt-1" :message="errors.max_time"/>
                         </div>
                     </div>

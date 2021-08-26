@@ -1,5 +1,6 @@
 <template>
     <authenticated-layout>
+        <Head title="Lista de informes" />
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Lista de informes
@@ -138,6 +139,7 @@ import TrashIcon from "@/Components/Icon/TrashIcon";
 import Modal from "@/Components/Notification/Modal";
 import MyButton from "@/Components/UI/MyButton";
 import {Inertia} from "@inertiajs/inertia";
+import { Head } from '@inertiajs/inertia-vue3';
 import RefreshIcon from "@/Components/Icon/RefreshIcon";
 import {InertiaLink} from "@inertiajs/inertia-vue3";
 import StopIcon from "@/Components/Icon/StopIcon";
@@ -155,7 +157,8 @@ export default {
         TrashIcon,
         DashboardNotification,
         AuthenticatedLayout,
-        InertiaLink
+        InertiaLink,
+        Head
     },
 
     props: {

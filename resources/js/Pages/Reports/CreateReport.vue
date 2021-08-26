@@ -1,5 +1,6 @@
 <template>
     <authenticated-layout>
+        <Head title="Generar informe"/>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Nuevo informe
@@ -75,6 +76,7 @@ import FormButton from "@/Components/UI/MyButton";
 import FormCheckbox from "@/Components/Form/Checkbox";
 import DashboardNotification from "@/Components/Notification/DashboardNotification";
 import ButtonLink from "@/Components/UI/ButtonLink";
+import { Head } from '@inertiajs/inertia-vue3';
 
 export default {
     props: {
@@ -115,7 +117,8 @@ export default {
         InputField,
         InputError,
         FormButton,
-        FormCheckbox
+        FormCheckbox,
+        Head
     },
 
     methods: {

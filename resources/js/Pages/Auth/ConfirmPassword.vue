@@ -1,5 +1,5 @@
 <template>
-    <Head title="Confirm Password" />
+    <Head title="Zona protegida" />
 
     <div class="mb-4 text-sm text-gray-600">
         Esta es una zona protegida de la aplicación. Por favor, confirma tu contraseña para continuar.

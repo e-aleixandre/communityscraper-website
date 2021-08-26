@@ -1,5 +1,5 @@
 <template>
-    <Head title="Reset Password" />
+    <Head title="Reestablecer contraseña" />
 
     <BreezeValidationErrors class="mb-4" />
 

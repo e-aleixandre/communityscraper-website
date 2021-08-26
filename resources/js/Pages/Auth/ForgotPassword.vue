@@ -1,5 +1,5 @@
 <template>
-    <Head title="Forgot Password" />
+    <Head title="Contraseña olvidada" />
 
     <div class="mb-4 text-sm text-gray-600">
         ¿Olvidaste tu contraseña? No pasa nada. Introduce tu email y te enviaremos un enlace para reestablecer tu contraseña.

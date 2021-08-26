@@ -186,6 +186,9 @@ export default {
         },
         deleteReport(reportId) {
             Inertia.delete(this.route('reports.destroy', reportId), {
+                onStart: () => {
+                  this.deleteModal.processing = true;
+                },
                 onFinish: () => {
                     this.deleteModal.show = false;
                     this.deleteModal.processing = false;

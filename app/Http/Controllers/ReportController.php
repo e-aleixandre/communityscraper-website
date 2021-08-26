@@ -88,7 +88,7 @@ class ReportController extends Controller
         ]);
 
         // Contacting to the API to instantiate the py exporter
-        $apiResponse = Http::post('http://localhost:3000/reports', [
+        $apiResponse = Http::post(config('api.API_URL') . '/reports', [
             'token' => $token
         ]);
 
@@ -131,7 +131,7 @@ class ReportController extends Controller
         $report->save();
 
         // Fetch the file
-        $responseObject = Http::get('http://localhost:3000/reports', [
+        $responseObject = Http::get(config('api.API_URL') . '/reports', [
             'filename' => $report->filename
         ]);
 
@@ -149,9 +149,9 @@ class ReportController extends Controller
         ];
     }
 
-    public function download_report(Request $request, Report $report)
+    public function download_report(Report $report)
     {
-        $apiResponse = Http::get('http://localhost:3000/reports', [
+        $apiResponse = Http::get(config('api.API_URL') . '/reports', [
             'filename' => $report->filename
         ]);
 
@@ -173,7 +173,7 @@ class ReportController extends Controller
             'token' => $token
         ]);
 
-        $apiResponse = Http::post("http://localhost:3000/reports/$report->id/stop", [
+        $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/stop", [
             'token' => $token
         ]);
 
@@ -190,7 +190,7 @@ class ReportController extends Controller
             'token' => $token
         ]);
 
-        $apiResponse = Http::post("http://localhost:3000/reports/$report->id/destroy", [
+        $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/destroy", [
             'token' => $token
         ]);
 

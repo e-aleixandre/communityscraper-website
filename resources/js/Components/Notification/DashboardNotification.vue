@@ -24,32 +24,29 @@ export default {
     },
 
     created() {
-            let color;
-            let title;
-
             switch (this.type)
             {
                 case 'danger':
-                    color = 'red';
-                    title = 'Error';
+                    this.bgClass = `bg-red-100`;
+                    this.borderClass = `border-red-500`;
+                    this.title = 'Error';
                     break;
                 case 'success':
-                    color = 'green';
-                    title = 'Éxito';
+                    this.bgClass = `bg-green-100`;
+                    this.borderClass = `border-green-500`;
+                    this.title = 'Éxito';
                     break;
                 case 'warning':
-                    color = 'yellow';
-                    title = 'Alerta';
+                    this.bgClass = `bg-yellow-100`;
+                    this.borderClass = `border-yellow-500`;
+                    this.title = 'Alerta';
                     break;
                 case 'info':
-                    color = 'blue';
-                    title = 'Información';
+                    this.bgClass = `bg-blue-100`;
+                    this.borderClass = `border-blue-500`;
+                    this.title = 'Información';
                     break;
             }
-
-            this.bgClass = `bg-${color}-100`;
-            this.borderClass = `border-${color}-500`;
-            this.title = title;
     }
 }
 </script>

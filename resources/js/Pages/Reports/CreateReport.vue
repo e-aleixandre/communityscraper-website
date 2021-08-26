@@ -9,10 +9,10 @@
 
         <dashboard-container>
             <template v-if="!created">
-                <dashboard-notification class="mb-4" :type="flash.type" v-if="errored" type="danger">
+                <dashboard-notification class="mb-4" :type="flash.type" v-if="errored">
                     {{ flash.message }}
                 </dashboard-notification>
-                <dashboard-notification v-else type="info">
+                <dashboard-notification class="mb-4" v-else type="info">
                     Introduce las fechas y horas de inicio y final para empezar a generar el informe. Puedes solicitar que se te notifique por email cuando se acabe de generar, y recibirás el informe como archivo adjunto. <span class="font-bold">Si el informe da un error se te notificará de todos modos.</span>
                 </dashboard-notification>
                 <form novalidate class="w-full md:w-5/12" @submit.prevent="submit">

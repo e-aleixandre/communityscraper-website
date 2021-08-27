@@ -161,7 +161,8 @@ class ReportController extends Controller
         return response()->streamDownload(function () use ($apiResponse) {
             echo $apiResponse->body();
         }, $report->filename, [
-            'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            'Content-Type' =>  'application/vnd.ms-excel',
+            'Content-Disposition' => 'attachment; filename="' . $report->filename .'"'
         ]);
     }
 

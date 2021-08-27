@@ -55,6 +55,7 @@ class ReportController extends Controller
             'errored' => false
         ])->count();
 
+
         // Return an error if a report is already running
         // TODO: Manage queues or something so another report can be added
         if ($currentReports > 0) {

@@ -70,8 +70,8 @@
 
                                         <td class="py-3 px-6 text-center whitespace-nowrap">
                                             <div :class="{'bg-indigo-500': !report.completed && !report.errored,
-                                                           'bg-red-500': report.completed && !report.errored,
-                                                           'bg-green-500': report.errored && !report.completed,
+                                                           'bg-green-500': report.completed && !report.errored,
+                                                           'bg-red-500': report.errored && !report.completed,
                                                            'bg-gray-700': report.errored && report.completed}"
                                                  class="rounded-full py-1 inline-block px-6 text-white text-xs w-32 text-center font-extrabold">
                                                 <template v-if="!report.completed && !report.errored">

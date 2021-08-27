@@ -36,4 +36,12 @@ Route::post('/reports/{report}/stop', [ReportController::class, 'stop_report'])-
 Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->middleware('auth')->name('reports.destroy');
 Route::post('/reports/{report}/restart', [ReportController::class, 'restart'])->middleware('auth')->name('reports.restart');
 
+Route::get('/tls', function() {
+    $response = \Illuminate\Support\Facades\Http::withOptions([
+        'cert' => [base_path() . '/certs/cert.pem', '3Mont4N4nA'],
+        'key' =>[base_path() . '/certs/key.pem', '3Mont4N4nA']
+    ])->get('https://localhost:8080/tls');
+    dd($response->object());
+});
+
 require __DIR__ . '/auth.php';

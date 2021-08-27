@@ -169,14 +169,10 @@ class ReportController extends Controller
 
     public function stop_report(Report $report)
     {
-        $token = Str::random(32);
-
-        $report->update([
-            'token' => $token
-        ]);
+        $report->setToken();
 
         $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/stop", [
-            'token' => $token
+            'token' => $report->token
         ]);
 
         return Redirect::back()->with([
@@ -186,18 +182,26 @@ class ReportController extends Controller
 
     public function destroy(Report $report)
     {
-        $token = Str::random(32);
-
-        $report->update([
-            'token' => $token
-        ]);
+        $report->setToken();
 
         $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/destroy", [
-            'token' => $token
+            'token' => $report->token
         ]);
 
         return Redirect::back()->with([
             'ok' => $apiResponse->ok()
         ]);
     }
+
+    public function restart(Report $report)
+    {
+        $report->setToken();
+
+        $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/restart", [
+            'token' => $report->token
+        ]);
+
+        dd($apiResponse);
+    }
+
 }

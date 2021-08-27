@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Report
@@ -46,8 +47,17 @@ class Report extends Model
 
     protected $fillable = ["min_date", "max_date", "token", "notify"];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function setToken(): Report
+    {
+        $this->token = Str::random(32);
+
+        $this->save();
+
+        return $this;
     }
 }

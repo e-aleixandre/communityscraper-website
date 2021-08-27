@@ -34,5 +34,6 @@ Route::get('/reports/create', [ReportController::class, 'create'])->middleware('
 Route::get('/reports/{report}/download', [ReportController::class, 'download_report'])->middleware('auth')->name('reports.download');
 Route::post('/reports/{report}/stop', [ReportController::class, 'stop_report'])->middleware('auth')->name('reports.stop');
 Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->middleware('auth')->name('reports.destroy');
+Route::post('/reports/{report}/restart', [ReportController::class, 'restart'])->middleware('auth')->name('reports.restart');
 
 require __DIR__ . '/auth.php';

@@ -20249,8 +20249,11 @@ __webpack_require__.r(__webpack_exports__);
       this.deleteModal.reportId = reportId;
       this.deleteModal.show = true;
     },
-    stopProcess: function stopProcess(reportId) {
+    stopReport: function stopReport(reportId) {
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__.Inertia.post(this.route('reports.stop', reportId));
+    },
+    restartReport: function restartReport(reportId) {
+      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__.Inertia.post(this.route('reports.restart', reportId));
     },
     deleteReport: function deleteReport(reportId) {
       var _this = this;
@@ -22751,7 +22754,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
                 'bg-gray-50': index % 2
               }, "border-b border-gray-200 hover:bg-gray-100 cursor-pointer"]),
-              onClick: _cache[3] || (_cache[3] = function () {})
+              onClick: _cache[2] || (_cache[2] = function () {})
             }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Fecha inicial "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.minDates[report.id]), 1
             /* TEXT */
             ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Fecha inicial "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.maxDates[report.id]), 1
@@ -22789,13 +22792,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             /* PROPS */
             , _hoisted_24)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Action: stop "), !report.completed && !report.errored ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_stop_icon, {
               onClick: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
-                return $options.stopProcess(report.id);
+                return $options.stopReport(report.id);
               }, ["stop"])
             }, null, 8
             /* PROPS */
-            , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Action: restart -- bool != bool simulates XOR "), report.errored ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_refresh_icon, {
-              onClick: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {}, ["stop"]))
-            })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Action: delete "), report.completed || report.errored ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_trash_icon, {
+            , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Action: restart "), report.errored ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_refresh_icon, {
+              onClick: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+                return $options.restartReport(report.id);
+              }, ["stop"])
+            }, null, 8
+            /* PROPS */
+            , ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Action: delete "), report.completed || report.errored ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_trash_icon, {
               onClick: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
                 return $options.showDeleteModal(report.id);
               }, ["stop"])
@@ -23153,7 +23160,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter-active[data-v-39523790], .fade-leave-active[data-v-39523790] {\r\n    transition: opacity .5s\n}\n.fade-enter[data-v-39523790], .fade-leave-to[data-v-39523790] /* .fade-leave-active below version 2.1.8 */\r\n{\r\n    opacity: 0\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter-active[data-v-39523790], .fade-leave-active[data-v-39523790] {\n    transition: opacity .5s\n}\n.fade-enter[data-v-39523790], .fade-leave-to[data-v-39523790] /* .fade-leave-active below version 2.1.8 */\n{\n    opacity: 0\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

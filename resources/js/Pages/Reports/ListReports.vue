@@ -102,13 +102,13 @@
                                                 <div
                                                     v-if="!report.completed && !report.errored"
                                                     class="w-5 mr-2 transform hover:text-purple-500 hover:scale-110 cursor-pointer">
-                                                    <stop-icon @click.stop="stopProcess(report.id)"/>
+                                                    <stop-icon @click.stop="stopReport(report.id)"/>
                                                 </div>
-                                                <!-- Action: restart -- bool != bool simulates XOR -->
+                                                <!-- Action: restart -->
                                                 <div
                                                     v-if="report.errored"
                                                     class="w-5 mr-2 transform hover:text-purple-500 hover:scale-110 cursor-pointer">
-                                                    <refresh-icon @click.stop=""/>
+                                                    <refresh-icon @click.stop="restartReport(report.id)"/>
                                                 </div>
                                                 <!-- Action: delete -->
                                                 <div
@@ -181,8 +181,11 @@ export default {
             this.deleteModal.reportId = reportId;
             this.deleteModal.show = true;
         },
-        stopProcess(reportId) {
+        stopReport(reportId) {
           Inertia.post(this.route('reports.stop', reportId));
+        },
+        restartReport(reportId) {
+          Inertia.post(this.route('reports.restart', reportId));
         },
         deleteReport(reportId) {
             Inertia.delete(this.route('reports.destroy', reportId), {

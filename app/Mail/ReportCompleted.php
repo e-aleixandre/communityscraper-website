@@ -12,7 +12,7 @@ class ReportCompleted extends Mailable
     use Queueable, SerializesModels;
 
     protected String $filename;
-    protected Stream $contents;
+    protected String $contents;
 
     /**
      * Create a new message instance.

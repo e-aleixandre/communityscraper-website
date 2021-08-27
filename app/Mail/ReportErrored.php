@@ -28,6 +28,6 @@ class ReportErrored extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.reports.errored');
+        return $this->markdown('emails.reports.errored')->subject('Informe fallido');
     }
 }

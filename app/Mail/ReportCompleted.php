@@ -32,7 +32,7 @@ class ReportCompleted extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.reports.completed')->attachData($this->contents, $this->filename, [
+        return $this->markdown('emails.reports.completed')->subject('Informe completado')->attachData($this->contents, $this->filename, [
             'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ]);
     }

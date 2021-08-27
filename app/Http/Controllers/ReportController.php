@@ -131,17 +131,19 @@ class ReportController extends Controller
         // Update the model
         $report->save();
 
-        // Fetch the file
-        $responseObject = Http::get(config('api.API_URL') . '/reports', [
-            'filename' => $report->filename
-        ]);
-
-        $file = $responseObject->body();
-
         // NOTIFY
         if ($report->completed)
+        {
+            // If completed fetch the file and send it
+            $responseObject = Http::get(config('api.API_URL') . '/reports', [
+                'filename' => $report->filename
+            ]);
+
+            $file = $responseObject->body();
+
             Mail::to($report->user)->send(new ReportCompleted($report->filename, $file));
-        else
+        }
+        else  // If not completed just report the error
             Mail::to($report->user)->send(new ReportErrored());
 
         // Communicating to the API everything went OK

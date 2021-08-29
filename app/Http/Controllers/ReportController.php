@@ -183,7 +183,9 @@ class ReportController extends Controller
             'id' => $report->id
         ]);
 
-        dd($apiResponse);
+        return Redirect::back()->with([
+            'ok' => $apiResponse->ok()
+        ]);
     }
 
 }

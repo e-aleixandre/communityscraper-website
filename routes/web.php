@@ -28,7 +28,7 @@ Route::get('/', function () {
 Route::get('/reports', [ReportController::class, 'index'])->middleware('auth')->name('reports.index');
 
 // TODO: Is it more reasonable to use a post request?
-Route::get('/reports/{report}/notify', [ReportController::class, 'send_notification'])->middleware('cert');
+Route::get('/reports/{report}/notify', [ReportController::class, 'send_notification']);//->middleware('cert'); Nginx handles this now (temporarily)
 
 Route::post('/reports', [ReportController::class, 'store'])->middleware('auth')->name('reports.store');
 Route::get('/reports/create', [ReportController::class, 'create'])->middleware('auth')->name('reports.create');

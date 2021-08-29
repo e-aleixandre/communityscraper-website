@@ -3,6 +3,7 @@
 use App\Http\Controllers\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Report;
 
@@ -27,7 +28,7 @@ Route::get('/', function () {
 Route::get('/reports', [ReportController::class, 'index'])->middleware('auth')->name('reports.index');
 
 // TODO: Is it more reasonable to use a post request?
-Route::get('/reports/notify', [ReportController::class, 'send_notification']);
+Route::get('/reports/{report}/notify', [ReportController::class, 'send_notification'])->middleware('cert');
 
 Route::post('/reports', [ReportController::class, 'store'])->middleware('auth')->name('reports.store');
 Route::get('/reports/create', [ReportController::class, 'create'])->middleware('auth')->name('reports.create');
@@ -35,13 +36,5 @@ Route::get('/reports/{report}/download', [ReportController::class, 'download_rep
 Route::post('/reports/{report}/stop', [ReportController::class, 'stop_report'])->middleware('auth')->name('reports.stop');
 Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->middleware('auth')->name('reports.destroy');
 Route::post('/reports/{report}/restart', [ReportController::class, 'restart'])->middleware('auth')->name('reports.restart');
-
-Route::get('/tls', function() {
-    $response = \Illuminate\Support\Facades\Http::withOptions([
-        'cert' => [base_path() . '/certs/cert.pem', '3Mont4N4nA'],
-        'key' =>[base_path() . '/certs/key.pem', '3Mont4N4nA']
-    ])->get('https://localhost:8080/tls');
-    dd($response->object());
-});
 
 require __DIR__ . '/auth.php';

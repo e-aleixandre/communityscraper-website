@@ -6,7 +6,7 @@ use App\Mail\ReportCompleted;
 use App\Mail\ReportErrored;
 use App\Models\Report;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -78,19 +78,18 @@ class ReportController extends Controller
             ]);
         }
 
-        // Create the report and a token before contacting the API
-        $token = Str::random(32);
-
-        $request->user()->reports()->create([
+        // We didn't find a report, so we create a new one
+        $report = $request->user()->reports()->create([
             'min_date' => $min_date,
             'max_date' => $max_date,
-            'token' => $token,
             'notify' => $validated['notify']
         ]);
 
+        // TODO: Check this and see if it's overcomplicating things
+
         // Contacting to the API to instantiate the py exporter
-        $apiResponse = Http::post(config('api.API_URL') . '/reports', [
-            'token' => $token
+        $apiResponse = Http::certified()->post(config('api.API_URL') . '/reports', [
+            'id' => $report->id
         ]);
 
         // Create the response array
@@ -113,29 +112,16 @@ class ReportController extends Controller
     /**
      * Endpoint for the API to connect and trigger a notification when a report finishes o errors
      *
-     * @param Request $request
+     * @param Report $report
      * @return bool[]
      */
-    public function send_notification(Request $request)
+    public function send_notification(Report $report)
     {
-
-        // Get the query param
-        $token = $request->query('token');
-
-        // Find the report with that token or throw a 404
-        $report = Report::where('token', $token)->firstOrFail();
-
-        // Remove the token (only notify once)
-        $report->token = null;
-
-        // Update the model
-        $report->save();
-
         // NOTIFY
         if ($report->completed)
         {
             // If completed fetch the file and send it
-            $responseObject = Http::get(config('api.API_URL') . '/reports', [
+            $responseObject = Http::certified()->get(config('api.API_URL') . '/reports', [
                 'filename' => $report->filename
             ]);
 
@@ -154,7 +140,7 @@ class ReportController extends Controller
 
     public function download_report(Report $report)
     {
-        $apiResponse = Http::get(config('api.API_URL') . '/reports', [
+        $apiResponse = Http::certified()->get(config('api.API_URL') . '/reports', [
             'filename' => $report->filename
         ]);
 
@@ -171,10 +157,8 @@ class ReportController extends Controller
 
     public function stop_report(Report $report)
     {
-        $report->setToken();
-
-        $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/stop", [
-            'token' => $report->token
+        $apiResponse = Http::certified()->post(config('api.API_URL') . "/reports/stop", [
+            'id' => $report->id
         ]);
 
         return Redirect::back()->with([
@@ -184,10 +168,8 @@ class ReportController extends Controller
 
     public function destroy(Report $report)
     {
-        $report->setToken();
-
-        $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/destroy", [
-            'token' => $report->token
+        $apiResponse = Http::certified()->post(config('api.API_URL') . "/reports/destroy", [
+            'id' => $report->id
         ]);
 
         return Redirect::back()->with([
@@ -197,10 +179,8 @@ class ReportController extends Controller
 
     public function restart(Report $report)
     {
-        $report->setToken();
-
-        $apiResponse = Http::post(config('api.API_URL') . "/reports/$report->id/restart", [
-            'token' => $report->token
+        $apiResponse = Http::certified()->post(config('api.API_URL') . "/reports/restart", [
+            'id' => $report->id
         ]);
 
         dd($apiResponse);

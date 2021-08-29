@@ -59,7 +59,11 @@ class ReportController extends Controller
         // Return an error if a report is already running
         // TODO: Manage queues or something so another report can be added
         if ($currentReports > 0) {
-            return "Current reports: $currentReports";
+            return Redirect::back()->with([
+                'ok' => false,
+                'type' => 'danger',
+                'message' => 'Ya hay un informe generándose en estos momentos. Espera a que termine. Pronto podrás poner informes en cola para que se vayan generando.'
+            ]);
         }
 
         // Check if there's a completed report with those dates

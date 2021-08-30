@@ -144,6 +144,9 @@ class ReportController extends Controller
 
     public function download_report(Report $report)
     {
+        if (request()->header('x-inertia'))
+            return Inertia::location(request()->fullUrl());
+
         $apiResponse = Http::certified()->get(config('api.API_URL') . '/reports', [
             'filename' => $report->filename
         ]);

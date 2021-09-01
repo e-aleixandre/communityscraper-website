@@ -144,6 +144,7 @@ class ReportController extends Controller
 
     public function download_report(Report $report)
     {
+        // Force full redirect outside from Inertia
         if (request()->header('x-inertia'))
             return Inertia::location(request()->fullUrl());
 

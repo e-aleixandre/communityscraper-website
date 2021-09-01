@@ -20,7 +20,7 @@ class VerifyClientCertificate
 
         $chain = $this->getChainCertificates();
 
-        $cert = $request->server('SSL_CLIENT_CERT');
+        $cert = urldecode($request->server('HTTP_X_CLIENT_CERT'));
 
         foreach ($chain as &$issuer)
         {
@@ -36,7 +36,7 @@ class VerifyClientCertificate
     private function getChainCertificates() : array {
         $chain = file_get_contents(Config::get('certificates.chain'));
 
-        preg_match_all("~-+BEGIN CERTIFICATE-+\s[a-zA-Z0-9\/\+\s]+-+END CERTIFICATE-+\s~", $chain, $issuers);
+        preg_match_all("~-+BEGIN CERTIFICATE-+\s[a-zA-Z0-9/+\s]+-+END CERTIFICATE-+\s~", $chain, $issuers);
 
         return $issuers[0] ?? array();
     }
